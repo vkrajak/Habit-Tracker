@@ -8,10 +8,10 @@ spring:
   # H2 file-based database - free, embedded, zero setup.
   # Data persists in ./data/habittracker.mv.db between restarts.
   datasource:
-    url: jdbc:h2:file:./data/habittracker;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: ""
+    url: jdbc:mysql://localhost:3306/habittracker
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Vipink92@
 
   jpa:
     hibernate:
@@ -21,11 +21,6 @@ spring:
       hibernate:
         format_sql: true
     open-in-view: false
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
 
 app:
   jwt:
