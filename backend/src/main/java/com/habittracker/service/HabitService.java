@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -55,18 +56,49 @@ public class HabitService {
 
     @Transactional
     public HabitResponse updateHabit(User user, Long habitId, HabitRequest request) {
+
+        System.out.println("1. validateFrequencyFields");
         validateFrequencyFields(request);
+
+        System.out.println("2. getOwnedHabit");
         Habit habit = getOwnedHabit(user, habitId);
+
+        System.out.println("3. Updating habit: " + habit.getId());
 
         habit.setName(request.getName());
         habit.setDescription(request.getDescription());
         habit.setFrequencyType(request.getFrequencyType());
-        habit.setSpecificDays(request.getSpecificDays() == null ? java.util.Set.of() : request.getSpecificDays());
-        habit.setTargetPerWeek(request.getTargetPerWeek());
-        if (request.getColorHex() != null) habit.setColorHex(request.getColorHex());
-        if (request.getIcon() != null) habit.setIcon(request.getIcon());
 
-        habitRepository.save(habit);
+        habit.setSpecificDays(
+                request.getSpecificDays() == null
+                        ? new HashSet<>()
+                        : new HashSet<>(request.getSpecificDays())
+        );
+
+        habit.setTargetPerWeek(request.getTargetPerWeek());
+
+        if (request.getColorHex() != null) {
+            habit.setColorHex(request.getColorHex());
+        }
+
+        if (request.getIcon() != null) {
+            habit.setIcon(request.getIcon());
+        }
+
+        System.out.println("4. Saving habit");
+
+        try {
+            habitRepository.saveAndFlush(habit);
+            System.out.println("5. SAVE AND FLUSH SUCCESS");
+        } catch (Exception e) {
+            System.out.println("========== UPDATE HABIT FAILED ==========");
+            e.printStackTrace();
+            System.out.println("=========================================");
+            throw e;
+        }
+
+        System.out.println("6. Converting response");
+
         return toResponse(habit);
     }
 

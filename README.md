@@ -1,4 +1,4 @@
-# Fieldnotes — Habit Tracker
+cd # Fieldnotes — Habit Tracker
 
 A personal habit tracker built with **Spring Boot** (Java 21) and **React + TypeScript**.
 100% free to run — everything lives on your laptop, no cloud services, no paid accounts.
